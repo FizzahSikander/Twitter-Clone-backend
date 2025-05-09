@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     occupation: { type: String, default: "" },
     hometown: { type: String, default: "" },
     website: { type: String, default: "" },
-    registeredAt: { type: Date, default: Date.now },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     bio: String,
@@ -22,4 +21,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+export default User
