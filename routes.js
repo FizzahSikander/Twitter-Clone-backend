@@ -4,21 +4,24 @@ import { Router } from "express";
 import {
   handleRegister,
   handleLogin,
-  validateUser,
+  validateUser, getUser
 } from "./middlewares/handleUser.js";
+import multer from 'multer';
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 
 const router = Router();
 
 // Login & Registration
-router.post("/register", handleRegister);
+router.post("/register", upload.single("image"), handleRegister);
 router.post("/login", handleLogin);
 
-// Validation
-router.get("/", (req, res) => {
-  console.log("welcome to root");
-  res.json({ message: "Welcome to root" }).status(200);
-});
 
+
+router.get("/profile/:username", getUser);
+
+// Validation
 router.get("/validate", validateUser, (req, res) => {
   console.log(req.user);
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
