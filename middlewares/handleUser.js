@@ -1,11 +1,13 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { uploadImg } from "../configs/cloudinary.js";
 
 const jwtSecret = "secret by hamoudi";
 
 export const handleRegister = async (req, res) => {
   const { name, email, password, nickname, ...rest } = req.body;
+
 
   const emailExist = await User.findOne({ email });
   if (emailExist)
@@ -15,6 +17,16 @@ export const handleRegister = async (req, res) => {
   if (nicknameExist)
     return res.status(400).json({ error: "Nickname is taken" });
 
+  const imgBuffer = req.file?.buffer;
+
+  let imageUrl
+  if (imgBuffer) {
+    imageUrl = await uploadImg(imgBuffer)
+
+  }
+
+
+
   const hashed = await bcrypt.hash(password, 5);
 
   const newUser = new User({
@@ -22,6 +34,7 @@ export const handleRegister = async (req, res) => {
     email,
     nickname,
     password: hashed,
+    ...(imageUrl && { image: imageUrl }),
 
     ...rest,
   });
@@ -72,4 +85,20 @@ export const validateUser = async (req, res, next) => {
 
     next();
   });
+};
+
+
+
+
+
+
+
+
+export const getUser = async (req, res) => {
+  const { username } = req.params
+
+  const user = await User.findOne({ nickname: username })
+  console.log(user)
+
+  res.status(200).json({ user })
 };
