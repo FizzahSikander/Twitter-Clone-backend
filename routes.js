@@ -7,6 +7,8 @@ import {
   validateUser,
 } from "./middlewares/handleUser.js";
 
+import { HandleTweet } from "./middlewares/handleTweet.js";
+
 const router = Router();
 
 // Login & Registration
@@ -23,5 +25,8 @@ router.get("/validate", validateUser, (req, res) => {
   console.log(req.user);
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
 });
+
+// saving tweet
+router.post("/tweet", HandleTweet);
 
 export default router;
