@@ -66,7 +66,7 @@ export const handleLogin = async (req, res) => {
       maxAge: 60 * 60 * 1000,
     })
     .status(200)
-    .json({ message: "Authenticated" });
+    .json({ message: "Authenticated", user });
 };
 
 export const validateUser = async (req, res, next) => {
