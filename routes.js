@@ -23,7 +23,7 @@ router.get("/profile/:username", getUser);
 
 // Validation
 router.get("/validate", validateUser, (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
 });
 

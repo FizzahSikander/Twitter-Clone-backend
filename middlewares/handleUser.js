@@ -9,6 +9,7 @@ export const handleRegister = async (req, res) => {
   const { name, email, password, nickname, ...rest } = req.body;
 
 
+
   const emailExist = await User.findOne({ email });
   if (emailExist)
     return res.status(400).json({ error: "Email already exists" });
@@ -47,6 +48,7 @@ export const handleRegister = async (req, res) => {
 export const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
+
   const user = await User.findOne({ email });
   if (!user) return res.status(400).json({ error: "Email not found" });
 
@@ -70,10 +72,11 @@ export const handleLogin = async (req, res) => {
 export const validateUser = async (req, res, next) => {
   const token = req.cookies?.token;
 
-  if (!token) return res.status(401).json({ error: "No token provided" });
+
+  if (!token) return res.status(403).json({ error: "No token provided" });
 
   jwt.verify(token, jwtSecret, async (err, decoded) => {
-    if (err) return res.status(403).json({ error: "Unauthorized token" });
+    if (err) return res.status(401).json({ error: "Unauthorized token" });
 
     const user = await User.findById(decoded.id).lean();
     if (!user) return res.status(400).json({ error: "User not found" });
