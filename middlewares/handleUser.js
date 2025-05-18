@@ -41,8 +41,10 @@ export const handleRegister = async (req, res) => {
   });
 
   await newUser.save();
+  const { password: _, __v, ...safeUser } = newUser.toObject();
+res.status(201).json({ message: "User created", user: safeUser });
 
-  res.status(201).json({ message: "User created" });
+
 };
 
 export const handleLogin = async (req, res) => {
