@@ -109,7 +109,7 @@ export const logoutUser = (req, res) => {
 
 
 
-export const AuthResponse = (req, res) => {
+export const authResponse = (req, res) => {
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
 }
 
