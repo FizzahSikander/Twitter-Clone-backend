@@ -4,7 +4,7 @@ import { Router } from "express";
 import {
   handleRegister,
   handleLogin,
-  validateUser, getUser
+  validateUser, getUser, logoutUser
 } from "./middlewares/handleUser.js";
 import multer from 'multer';
 
@@ -16,6 +16,7 @@ const router = Router();
 // Login & Registration
 router.post("/register", upload.single("image"), handleRegister);
 router.post("/login", handleLogin);
+router.get("/logout", logoutUser);
 
 
 
