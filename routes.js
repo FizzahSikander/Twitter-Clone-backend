@@ -4,22 +4,20 @@ import { Router } from "express";
 import {
   handleRegister,
   handleLogin,
-  validateUser, getUser
+  validateUser,
+  getUser,
 } from "./middlewares/handleUser.js";
-import multer from 'multer';
+import multer from "multer";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-
-import { HandleTweet } from "./middlewares/handleTweet.js";
+import { HandleTweet, HandleUserLastTweet } from "./middlewares/handleTweet.js";
 
 const router = Router();
 
 // Login & Registration
 router.post("/register", upload.single("image"), handleRegister);
 router.post("/login", handleLogin);
-
-
 
 router.get("/profile/:username", getUser);
 
@@ -31,5 +29,9 @@ router.get("/validate", validateUser, (req, res) => {
 
 // saving tweet
 router.post("/tweet", HandleTweet);
+// get the latest tweet by user id
+router.get("/user-latest-tweet", HandleUserLastTweet);
+// get the user by user id
+router.get("/user", getUserById);
 
 export default router;

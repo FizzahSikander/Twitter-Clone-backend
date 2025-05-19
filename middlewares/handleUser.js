@@ -8,7 +8,6 @@ const jwtSecret = "secret by hamoudi";
 export const handleRegister = async (req, res) => {
   const { name, email, password, nickname, ...rest } = req.body;
 
-
   const emailExist = await User.findOne({ email });
   if (emailExist)
     return res.status(400).json({ error: "Email already exists" });
@@ -19,13 +18,10 @@ export const handleRegister = async (req, res) => {
 
   const imgBuffer = req.file?.buffer;
 
-  let imageUrl
+  let imageUrl;
   if (imgBuffer) {
-    imageUrl = await uploadImg(imgBuffer)
-
+    imageUrl = await uploadImg(imgBuffer);
   }
-
-
 
   const hashed = await bcrypt.hash(password, 5);
 
@@ -87,18 +83,11 @@ export const validateUser = async (req, res, next) => {
   });
 };
 
-
-
-
-
-
-
-
 export const getUser = async (req, res) => {
-  const { username } = req.params
+  const { username } = req.params;
 
-  const user = await User.findOne({ nickname: username })
-  console.log(user)
+  const user = await User.findOne({ nickname: username });
+  console.log(user);
 
-  res.status(200).json({ user })
+  res.status(200).json({ user });
 };
