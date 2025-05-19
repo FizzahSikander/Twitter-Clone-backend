@@ -36,11 +36,3 @@ export const HandleUserLastTweet = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
-  const { id } = req.params;
-
-  const user = await User.findOne({ id: id });
-  console.log(user);
-
-  res.status(200).json({ user });
-};

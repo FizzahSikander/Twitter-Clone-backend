@@ -7,7 +7,10 @@ import {
   validateUser,
   getUser,
   logoutUser,
+  AuthResponse,
 } from "./middlewares/handleUser.js";
+import { followUser, unfollowUser } from "./middlewares/actions.js";
+
 import multer from "multer";
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -15,7 +18,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 import {
   HandleTweet,
   HandleUserLastTweet,
-  getUserById,
 } from "./middlewares/handleTweet.js";
 
 const router = Router();
@@ -28,16 +30,19 @@ router.get("/logout", logoutUser);
 router.get("/profile/:username", getUser);
 
 // Validation
-router.get("/validate", validateUser, (req, res) => {
-  // console.log(req.user);
-  res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
-});
+router.get("/validate", validateUser, AuthResponse);
 
 // saving tweet
-router.post("/tweet", HandleTweet);
+router.post("/tweet", validateUser, HandleTweet);
+
 // get the latest tweet by user id
 router.get("/user-latest-tweet", HandleUserLastTweet);
-// get the user by user id
-router.get("/user", getUserById);
+
+
+// Follow user routes
+router.post('/users/:targetId/follow', validateUser, followUser);
+router.post('/users/:targetId/unfollow', validateUser, unfollowUser);
+
+
 
 export default router;
