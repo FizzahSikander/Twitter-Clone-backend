@@ -1,7 +1,7 @@
 import Tweet from "../models/Tweet.js";
 import User from "../models/User.js";
 
-export const HandleTweet = async (req, res) => {
+export const handleTweet = async (req, res) => {
   const { text, tags, comments, createdBy } = req.body;
 
   const newTweet = new Tweet({
@@ -14,7 +14,7 @@ export const HandleTweet = async (req, res) => {
   res.status(201).json({ message: "Tweet created successfully" });
 };
 
-export const HandleUserLastTweet = async (req, res) => {
+export const handleUserLastTweet = async (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
@@ -36,11 +36,3 @@ export const HandleUserLastTweet = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
-  const { id } = req.params;
-
-  const user = await User.findOne({ id: id });
-  console.log(user);
-
-  res.status(200).json({ user });
-};

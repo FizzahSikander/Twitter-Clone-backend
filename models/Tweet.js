@@ -21,7 +21,7 @@ const tweetSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true } // automatically includes createdAt and updatedAt for tweets
+  { timestamps: true }
 );
 
 const Tweet = mongoose.model("Tweet", tweetSchema);

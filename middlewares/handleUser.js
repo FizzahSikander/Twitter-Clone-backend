@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Tweet from "../models/Tweet.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { uploadImg } from "../configs/cloudinary.js";
@@ -86,10 +87,13 @@ export const validateUser = async (req, res, next) => {
 export const getUser = async (req, res) => {
   const { username } = req.params;
 
-  const user = await User.findOne({ nickname: username });
-  console.log(user);
+  const user = await User.findOne({ nickname: username }).select('-password -__v')
+  if (!user) return res.status(404).json({ error: "User not found" });
 
-  res.status(200).json({ user });
+  const tweetsByUser = await Tweet.find({ createdBy: user._id })
+  // console.log(tweetsByUser)
+
+  res.status(200).json({ user, tweetsByUser });
 };
 
 export const logoutUser = (req, res) => {
@@ -101,3 +105,11 @@ export const logoutUser = (req, res) => {
     .status(200)
     .json({ message: "Logged out" });
 };
+
+
+
+
+export const authResponse = (req, res) => {
+  res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
+}
+
