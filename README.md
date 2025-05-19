@@ -8,8 +8,8 @@ Built with Node.js, Express, and MongoDB.
 How to run:
 
 - Open a terminal in the backend folder and run:
-- 1. npm install
-- 2. npm start
+-  npm install
+-  npm start
 
 The server will start on port 3000 by default.
 
