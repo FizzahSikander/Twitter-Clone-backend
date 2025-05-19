@@ -107,3 +107,13 @@ export const getUser = async (req, res) => {
 
   res.status(200).json({ user })
 };
+
+
+
+export const logoutUser = (req, res) => {
+  res
+    .clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+    }).status(200).json({ message: 'Logged out' });
+};
