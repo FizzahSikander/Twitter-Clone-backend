@@ -11,7 +11,11 @@ import multer from "multer";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-import { HandleTweet, HandleUserLastTweet } from "./middlewares/handleTweet.js";
+import {
+  HandleTweet,
+  HandleUserLastTweet,
+  getUserById,
+} from "./middlewares/handleTweet.js";
 
 const router = Router();
 
