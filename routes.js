@@ -14,6 +14,11 @@ import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 import {
+  HandleTweet,
+  HandleUserLastTweet,
+  getUserById,
+  handleComment,
+  getCommentsByTweetId,
   handleTweet,
   handleUserLastTweet,
 } from "./middlewares/handleTweet.js";
@@ -34,13 +39,20 @@ router.get("/validate", validateUser, authResponse);
 router.post("/tweet", validateUser, handleTweet);
 
 // get the latest tweet by user id
+router.get("/user-latest-tweet", HandleUserLastTweet);
+
+// add comment
+router.put("/comment", handleComment);
+
+// get comments by tweetID
+router.get("/comments", getCommentsByTweetId);
+
+// get the user by user id
+router.get("/user", getUserById);
 router.get("/user-latest-tweet", handleUserLastTweet);
 
-
 // Follow user routes
-router.post('/users/:targetId/follow', validateUser, followUser);
-router.post('/users/:targetId/unfollow', validateUser, unfollowUser);
-
-
+router.post("/users/:targetId/follow", validateUser, followUser);
+router.post("/users/:targetId/unfollow", validateUser, unfollowUser);
 
 export default router;
