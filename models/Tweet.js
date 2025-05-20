@@ -7,7 +7,7 @@ const tweetSchema = new mongoose.Schema(
     comments: [
       {
         text: { type: String, required: true },
-        userId: {
+        createdBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
           required: true,

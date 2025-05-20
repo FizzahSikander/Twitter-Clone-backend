@@ -16,6 +16,8 @@ import {
   HandleTweet,
   HandleUserLastTweet,
   getUserById,
+  handleComment,
+  getCommentsByTweetId,
 } from "./middlewares/handleTweet.js";
 
 const router = Router();
@@ -37,6 +39,13 @@ router.get("/validate", validateUser, (req, res) => {
 router.post("/tweet", HandleTweet);
 // get the latest tweet by user id
 router.get("/user-latest-tweet", HandleUserLastTweet);
+
+// add comment
+router.put("/comment", handleComment);
+
+// get comments by tweetID
+router.get("/comments", getCommentsByTweetId);
+
 // get the user by user id
 router.get("/user", getUserById);
 
