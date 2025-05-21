@@ -7,7 +7,7 @@ import {
   logoutUser,
   authResponse,
 } from "./middlewares/handleUser.js";
-import { followUser, unfollowUser } from "./middlewares/actions.js";
+import { followUser, getTrendingTags, searchHandler, unfollowUser } from "./middlewares/actions.js";
 
 import multer from "multer";
 
@@ -47,10 +47,16 @@ router.get("/comments", getCommentsByTweetId);
 
 // get the user by user id
 router.get("/user", getUserById);
-router.get("/user-latest-tweet", handleUserLastTweet);
 
 // Follow user routes
 router.post("/users/:targetId/follow", validateUser, followUser);
 router.post("/users/:targetId/unfollow", validateUser, unfollowUser);
+
+
+
+router.get('/search', searchHandler);
+
+router.get('/tags', getTrendingTags);
+
 
 export default router;

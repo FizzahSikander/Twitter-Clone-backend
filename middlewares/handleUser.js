@@ -91,10 +91,13 @@ export const getUser = async (req, res) => {
   if (!user) return res.status(404).json({ error: "User not found" });
 
   const tweetsByUser = await Tweet.find({ createdBy: user._id })
-  // console.log(tweetsByUser)
+  console.log(tweetsByUser)
 
   res.status(200).json({ user, tweetsByUser });
 };
+
+
+
 
 export const logoutUser = (req, res) => {
   res
@@ -104,7 +107,7 @@ export const logoutUser = (req, res) => {
     })
     .status(200)
     .json({ message: "Logged out" });
-};
+}
 
 
 
