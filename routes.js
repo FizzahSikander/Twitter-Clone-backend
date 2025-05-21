@@ -14,8 +14,6 @@ import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 import {
-  HandleTweet,
-  HandleUserLastTweet,
   getUserById,
   handleComment,
   getCommentsByTweetId,
@@ -39,7 +37,7 @@ router.get("/validate", validateUser, authResponse);
 router.post("/tweet", validateUser, handleTweet);
 
 // get the latest tweet by user id
-router.get("/user-latest-tweet", HandleUserLastTweet);
+router.get("/user-latest-tweet", handleUserLastTweet);
 
 // add comment
 router.put("/comment", handleComment);
