@@ -4,13 +4,22 @@ import User from "../models/User.js";
 export const handleTweet = async (req, res) => {
   const { text, tags, comments, createdBy } = req.body;
 
+
   const newTweet = new Tweet({
-    text,
+    text: text.trim(),
     tags,
     createdBy,
   });
 
+  console.log(newTweet)
+
   await newTweet.save();
+
+  await User.findByIdAndUpdate(
+    createdBy,
+    { $push: { tweets: newTweet._id } }
+  );
+
   res.status(201).json({ message: "Tweet created successfully" });
 };
 
