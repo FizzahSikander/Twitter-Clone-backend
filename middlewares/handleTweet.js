@@ -6,7 +6,7 @@ export const handleTweet = async (req, res) => {
 
 
   const newTweet = new Tweet({
-    text: text.trim(),
+    text: text.trim(),,,
     tags,
     createdBy,
   });
