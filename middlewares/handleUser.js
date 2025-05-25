@@ -44,8 +44,9 @@ export const handleRegister = async (req, res) => {
 export const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean()
   if (!user) return res.status(400).json({ error: "Email not found" });
+
 
   const pass = await bcrypt.compare(password, user.password);
   if (!pass) return res.status(400).json({ error: "Wrong password" });
@@ -53,6 +54,10 @@ export const handleLogin = async (req, res) => {
   const token = jwt.sign({ id: user._id, username: user.username }, jwtSecret, {
     expiresIn: "1h",
   });
+  user.id = user._id
+  delete user.password;
+  delete user._id;
+
 
   res
     .cookie("token", token, {
@@ -91,7 +96,6 @@ export const getUser = async (req, res) => {
   if (!user) return res.status(404).json({ error: "User not found" });
 
   const tweetsByUser = await Tweet.find({ createdBy: user._id })
-  console.log(tweetsByUser)
 
   res.status(200).json({ user, tweetsByUser });
 };
