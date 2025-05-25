@@ -2,21 +2,19 @@ import Tweet from "../models/Tweet.js";
 import User from "../models/User.js";
 
 export const handleTweet = async (req, res) => {
-  const { text, tags, comments, createdBy } = req.body;
-
+  const { text, tags } = req.body;
 
   const newTweet = new Tweet({
     text: text.trim(),
     tags,
-    createdBy,
+    createdBy: req.user.id
   });
 
-  console.log(newTweet)
 
   await newTweet.save();
 
   await User.findByIdAndUpdate(
-    createdBy,
+    req.user.id,
     { $push: { tweets: newTweet._id } }
   );
 
@@ -33,15 +31,14 @@ export const handleUserLastTweet = async (req, res) => {
   try {
     const latestTweet = await Tweet.findOne({ createdBy: userId })
       .sort({ createdAt: -1 })
-      .lean(); // lean returns a plain JS object
+      .lean();
 
     if (!latestTweet) {
       return res.status(404).json({ message: "No tweet found" });
     }
 
     latestTweet.commentCount = latestTweet.comments?.length || 0;
-
-    res.json(latestTweet);
+    res.status(200).json(latestTweet)
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -62,8 +59,8 @@ export const getUserById = async (req, res) => {
 };
 
 export const handleComment = async (req, res) => {
-  const { tweetId } = req.body;
-  const { text, authorId } = req.body;
+  const { tweetId, text, authorId } = req.body;
+
   if (!text) {
     return res.status(400).json({ error: "Comment text is required" });
   }
