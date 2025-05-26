@@ -23,6 +23,20 @@ describe('POST /tweet', () => {
         cookie = res.headers['set-cookie'];
     });
 
+
+
+    it('Should return error if content is empty or incorrect', async () => {
+        const res = await request(app)
+            .post('/tweet')
+            .set('Cookie', cookie)
+            .send({
+                text: '',
+
+            });
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error', 'Missing content!');
+    });
+
     it('Should create a tweet with the hashtag "hello"', async () => {
         const res = await request(app)
             .post('/tweet')
@@ -44,7 +58,7 @@ describe('POST /tweet', () => {
     });
 
     it('Should comment on a tweet', async () => {
-        const res = await request(app).put('/comment').send({
+        const res = await request(app).put('/comment').set('Cookie', cookie).send({
             tweetId: tweetId,
             text: 'This is a test comment',
             authorId: userId,
@@ -53,4 +67,15 @@ describe('POST /tweet', () => {
         expect(res.body).toHaveProperty('message', 'Comment added');
         expect(res.body.tweet.comments[0].createdBy).toBe(userId);
     });
+
+
+
+    it('Should return error if comment is empty or incorrect', async () => {
+        const res = await request(app).put('/comment').set('Cookie', cookie).send({
+            tweetId: tweetId,
+        });
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error', 'Comment text is required');
+    });
+
 });

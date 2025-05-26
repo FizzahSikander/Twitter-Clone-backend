@@ -120,3 +120,33 @@ export const authResponse = (req, res) => {
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
 }
 
+
+
+
+export async function editUserImg(req, res) {
+  try {
+    const userId = req.user.id;
+
+
+    const image = req.files.find((f) => f.fieldname === 'image');
+    const banner = req.files.find((f) => f.fieldname === 'banner');
+
+
+    let update = {};
+
+    if (image) {
+      update.image = await uploadImg(image.buffer);
+    }
+    if (banner) {
+
+      update.banner = await uploadImg(banner.buffer);
+    }
+
+
+    await User.findByIdAndUpdate(userId, update);
+
+    res.status(200).json({ message: 'Profile updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

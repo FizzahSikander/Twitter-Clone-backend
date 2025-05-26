@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/dsr0s5lbq/image/upload/v1743707427/j8ry5tkeqmdhyoxp3nrc.jpg",
     },
+    banner: { type: String },
   },
   { timestamps: true }
 );

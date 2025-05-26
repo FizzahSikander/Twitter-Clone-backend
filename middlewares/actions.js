@@ -20,7 +20,7 @@ export const followUser = async (req, res) => {
     await User.findByIdAndUpdate(id, { $addToSet: { following: targetId } });
     await User.findByIdAndUpdate(targetId, { $addToSet: { followers: id } });
 
-    res.json({ message: 'Followed user', ok: true });
+    res.status(200).json({ message: 'Followed user', ok: true });
 };
 
 export const unfollowUser = async (req, res) => {
@@ -31,13 +31,14 @@ export const unfollowUser = async (req, res) => {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetId);
 
-    if (!user || !targetUser) return res.status(404).json({ error: 'User not found' });
+
+    if (!user || !targetUser) return res.status(404).json({ error: 'User not found' })
     if (id === targetId) return res.status(400).json({ error: 'Cannot unfollowing yourself' });
 
     await User.findByIdAndUpdate(id, { $pull: { following: targetId } });
     await User.findByIdAndUpdate(targetId, { $pull: { followers: id } });
 
-    res.json({ message: 'unfollowUser user', ok: true });
+    res.status(200).json({ message: 'Unfollowed user', ok: true });
 };
 
 export async function searchHandler(req, res) {
@@ -60,7 +61,6 @@ export async function searchHandler(req, res) {
                 .lean();
         }
 
-
         res.json({ type: isHashtag ? 'hashtag' : 'user', results });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -82,3 +82,4 @@ export async function getTrendingTags(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+

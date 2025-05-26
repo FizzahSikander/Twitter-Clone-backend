@@ -20,6 +20,7 @@ export const uploadImg = (buffer) => {
                 resolve(result.secure_url);
             }
         );
+
         stream.end(buffer);
     });
 };
