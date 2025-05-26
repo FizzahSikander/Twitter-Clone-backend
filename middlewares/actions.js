@@ -60,7 +60,6 @@ export async function searchHandler(req, res) {
                 .lean();
         }
 
-
         res.json({ type: isHashtag ? 'hashtag' : 'user', results });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -82,3 +81,4 @@ export async function getTrendingTags(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+
