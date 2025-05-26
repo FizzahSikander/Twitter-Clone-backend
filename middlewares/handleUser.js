@@ -127,7 +127,6 @@ export async function editUserImg(req, res) {
   try {
     const userId = req.user.id;
 
-    console.log(userId)
 
     const image = req.files.find((f) => f.fieldname === 'image');
     const banner = req.files.find((f) => f.fieldname === 'banner');
