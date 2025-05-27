@@ -6,6 +6,7 @@ import {
   getUser,
   logoutUser,
   authResponse,
+  editUserImg
 } from "./middlewares/handleUser.js";
 import { followUser, getTrendingTags, searchHandler, unfollowUser } from "./middlewares/actions.js";
 
@@ -40,7 +41,7 @@ router.post("/tweet", validateUser, handleTweet);
 router.get("/user-latest-tweet", handleUserLastTweet);
 
 // add comment
-router.put("/comment", handleComment);
+router.put("/comment", validateUser, handleComment);
 
 // get comments by tweetID
 router.get("/comments", getCommentsByTweetId);
@@ -55,6 +56,9 @@ router.post("/users/:targetId/unfollow", validateUser, unfollowUser);
 
 
 router.get('/search', searchHandler);
+
+router.patch('/edit-profile', validateUser, upload.any(), editUserImg);
+
 
 router.get('/tags', getTrendingTags);
 

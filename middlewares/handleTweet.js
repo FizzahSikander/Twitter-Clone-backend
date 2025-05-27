@@ -1,47 +1,39 @@
-import Tweet from "../models/Tweet.js";
-import User from "../models/User.js";
+import Tweet from '../models/Tweet.js';
+import User from '../models/User.js';
 
 export const handleTweet = async (req, res) => {
-  const { text, tags, comments, createdBy } = req.body;
+  const { text, tags } = req.body;
 
-
+  if (!text) return res.status(400).json({ error: 'Missing content!' });
   const newTweet = new Tweet({
     text: text.trim(),,,
     tags,
-    createdBy,
+    createdBy: req.user.id,
   });
-
-  console.log(newTweet)
 
   await newTweet.save();
 
-  await User.findByIdAndUpdate(
-    createdBy,
-    { $push: { tweets: newTweet._id } }
-  );
+  await User.findByIdAndUpdate(req.user.id, { $push: { tweets: newTweet._id } });
 
-  res.status(201).json({ message: "Tweet created successfully" });
+  res.status(201).json({ message: 'Tweet created successfully' });
 };
 
 export const handleUserLastTweet = async (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
-    return res.status(400).json({ error: "User ID is required" });
+    return res.status(400).json({ error: 'User ID is required' });
   }
 
   try {
-    const latestTweet = await Tweet.findOne({ createdBy: userId })
-      .sort({ createdAt: -1 })
-      .lean(); // lean returns a plain JS object
+    const latestTweet = await Tweet.findOne({ createdBy: userId }).sort({ createdAt: -1 }).lean();
 
     if (!latestTweet) {
-      return res.status(404).json({ message: "No tweet found" });
+      return res.status(404).json({ message: 'No tweet found' });
     }
 
     latestTweet.commentCount = latestTweet.comments?.length || 0;
-
-    res.json(latestTweet);
+    res.status(200).json(latestTweet);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -50,10 +42,9 @@ export const handleUserLastTweet = async (req, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.query;
   try {
-    const user = await User.findById(id).select("-password"); // or User.findOne({ _id: id })
-
+    const user = await User.findById(id).select('-password');
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: 'User not found' });
     }
     res.status(200).json(user);
   } catch (error) {
@@ -62,10 +53,11 @@ export const getUserById = async (req, res) => {
 };
 
 export const handleComment = async (req, res) => {
-  const { tweetId } = req.body;
-  const { text, authorId } = req.body;
-  if (!text) {
-    return res.status(400).json({ error: "Comment text is required" });
+  const { tweetId, text } = req.body;
+
+
+  if (!text || !tweetId) {
+    return res.status(400).json({ error: 'Comment text is required' });
   }
 
   try {
@@ -75,7 +67,7 @@ export const handleComment = async (req, res) => {
         $push: {
           comments: {
             text,
-            createdBy: authorId || null,
+            createdBy: req.user.id || null,
           },
         },
       },
@@ -83,10 +75,10 @@ export const handleComment = async (req, res) => {
     );
 
     if (!updatedTweet) {
-      return res.status(404).json({ error: "Tweet not found" });
+      return res.status(404).json({ error: 'Tweet not found' });
     }
 
-    res.status(200).json({ message: "Comment added", tweet: updatedTweet });
+    res.status(200).json({ message: 'Comment added', tweet: updatedTweet });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -97,12 +89,12 @@ export const getCommentsByTweetId = async (req, res) => {
 
   try {
     const tweet = await Tweet.findById(tweetId).populate({
-      path: "comments.createdBy",
-      select: "text, createdAt, createdBy", // include only selected fields
+      path: 'comments.createdBy',
+      select: 'text, createdAt, createdBy', // include only selected fields
     });
 
     if (!tweet) {
-      return res.status(404).json({ error: "Tweet not found" });
+      return res.status(404).json({ error: 'Tweet not found' });
     }
 
     res.status(200).json(tweet.comments);

@@ -8,8 +8,10 @@ Built with Node.js, Express, and MongoDB.
 How to run:
 
 - Open a terminal in the backend folder and run:
--  npm install
--  npm start
+- npm install
+- npm start
+
+**\*\*Must Create an .env file with a valid Mongo URI string\*\***
 
 The server will start on port 3000 by default.
 
@@ -27,8 +29,9 @@ Routes tested:
 - Register
 - Login
 - Validate (token)
-- Profile
-- (Add more as we create new routes)
+- Profile rendering
+- Tweet functionality
+- Follow actions
 
 Notes:
 

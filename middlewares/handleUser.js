@@ -44,8 +44,9 @@ export const handleRegister = async (req, res) => {
 export const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean()
   if (!user) return res.status(400).json({ error: "Email not found" });
+
 
   const pass = await bcrypt.compare(password, user.password);
   if (!pass) return res.status(400).json({ error: "Wrong password" });
@@ -53,6 +54,10 @@ export const handleLogin = async (req, res) => {
   const token = jwt.sign({ id: user._id, username: user.username }, jwtSecret, {
     expiresIn: "1h",
   });
+  user.id = user._id
+  delete user.password;
+  delete user._id;
+
 
   res
     .cookie("token", token, {
@@ -91,7 +96,6 @@ export const getUser = async (req, res) => {
   if (!user) return res.status(404).json({ error: "User not found" });
 
   const tweetsByUser = await Tweet.find({ createdBy: user._id })
-  console.log(tweetsByUser)
 
   res.status(200).json({ user, tweetsByUser });
 };
@@ -116,3 +120,33 @@ export const authResponse = (req, res) => {
   res.status(200).json({ message: "Token is valid", ok: true, user: req.user });
 }
 
+
+
+
+export async function editUserImg(req, res) {
+  try {
+    const userId = req.user.id;
+
+
+    const image = req.files.find((f) => f.fieldname === 'image');
+    const banner = req.files.find((f) => f.fieldname === 'banner');
+
+
+    let update = {};
+
+    if (image) {
+      update.image = await uploadImg(image.buffer);
+    }
+    if (banner) {
+
+      update.banner = await uploadImg(banner.buffer);
+    }
+
+
+    await User.findByIdAndUpdate(userId, update);
+
+    res.status(200).json({ message: 'Profile updated' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
