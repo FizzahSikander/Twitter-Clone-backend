@@ -6,7 +6,7 @@ export const handleTweet = async (req, res) => {
 
   if (!text) return res.status(400).json({ error: 'Missing content!' });
   const newTweet = new Tweet({
-    text: text.trim(),,,
+    text: text.trim(),
     tags,
     createdBy: req.user.id,
   });
