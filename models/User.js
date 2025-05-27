@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     homepage: { type: String, default: "" },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet' }],
+    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tweet" }],
     bio: String,
     image: {
       type: String,
@@ -25,8 +25,6 @@ const userSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model("User", userSchema);
-export default User
+export default User;
 
-
-
-
+// helllo
